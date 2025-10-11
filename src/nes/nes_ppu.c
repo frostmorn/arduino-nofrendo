@@ -832,6 +832,11 @@ static void ppu_renderoam(uint8 *vidbuf, int scanline)
       tile_index = sprite_ptr->tile;
       attrib = sprite_ptr->atr;
 
+      // check if sprite cords valid
+      if ((sprite_x > NES_SCREEN_WIDTH - 8)||(sprite_y > NES_SCREEN_HEIGHT - 8))
+          continue;
+
+
       bmp_ptr = buf_ptr + sprite_x;
 
       /* Handle $FD/$FE tile VROM switching (PunchOut) */
