@@ -701,8 +701,9 @@ static void ppu_renderbg(uint8 *vidbuf)
       memset(vidbuf, FULLBG, NES_SCREEN_WIDTH);
       return;
    }
-
-   bmp_ptr = vidbuf - ppu.tile_xofs;              /* scroll x */
+   // completely ignore xofs, mem bug, need to dive into it more
+   bmp_ptr = vidbuf;
+   // bmp_ptr = vidbuf - ppu.tile_xofs;              /* scroll x */
    refresh_vaddr = 0x2000 + (ppu.vaddr & 0x0FE0); /* mask out x tile */
    x_tile = ppu.vaddr & 0x1F;
    y_tile = (ppu.vaddr >> 5) & 0x1F;                  /* to simplify calculations */
