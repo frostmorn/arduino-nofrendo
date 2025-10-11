@@ -448,12 +448,13 @@ static int vid_findmode(int width, int height, viddriver_t *osd_driver)
    else
       bmp_clear(screen, GUI_BLACK);
 
+   nofrendo_log_printf("video driver: %s at %dx%d\n", driver->name,
+                       screen->width, screen->height);
+
    /* release surface */
    if (driver->free_write)
       driver->free_write(-1, NULL);
 
-   nofrendo_log_printf("video driver: %s at %dx%d\n", driver->name,
-                       screen->width, screen->height);
 
    return 0;
 }
