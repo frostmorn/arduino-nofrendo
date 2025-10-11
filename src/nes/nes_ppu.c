@@ -43,8 +43,8 @@
 #define PPU_MEM(x) ppu.page[(x) >> 10][(x)]
 
 /* Background (color 0) and solid sprite pixel flags */
-#define BG_TRANS 0x80
-#define SP_PIXEL 0x40
+#define BG_TRANS 0x80U
+#define SP_PIXEL 0x40U
 #define BG_CLEAR(V) ((V)&BG_TRANS)
 #define BG_SOLID(V) (0 == BG_CLEAR(V))
 #define SP_CLEAR(V) (0 == ((V)&SP_PIXEL))
@@ -62,7 +62,7 @@ void ppu_displaysprites(bool display)
 
 void ppu_setcontext(ppu_t *src_ppu)
 {
-   int nametab[4];
+   uint32 nametab[4];
    ASSERT(src_ppu);
    ppu = *src_ppu;
 
@@ -577,7 +577,6 @@ INLINE void draw_bgtile(uint8 *surface, uint8 pat1, uint8 pat2,
                         const uint8 *colors)
 {
    uint32 pattern = ((pat2 & 0xAA) << 8) | ((pat2 & 0x55) << 1) | ((pat1 & 0xAA) << 7) | (pat1 & 0x55);
-
    *surface++ = colors[(pattern >> 14) & 3];
    *surface++ = colors[(pattern >> 6) & 3];
    *surface++ = colors[(pattern >> 12) & 3];
