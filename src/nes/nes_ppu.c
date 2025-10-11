@@ -717,9 +717,15 @@ static void ppu_renderbg(uint8 *vidbuf)
    col_high = ((attrib >> attrib_shift) & 3) << 2;
 
    /* ppu fetches 33 tiles */
-   tile_count = 33;
+   tile_count = 32;
+   // ppu fetches 33, but screen is 32, additional one for smooth scrolling 
+   // but our vidbuf bitmap wrongly allocates mem or something.
+   // anyways we just render 32 and no mem problem. 
+      
    while (tile_count--)
    {
+      // printf("bmp_ptr = %p, vidbuf = %p, offset = %ld\n", 
+      //  (void*)bmp_ptr, (void*)vidbuf, bmp_ptr - vidbuf);
       /* Tile number from nametable */
       tile_index = *tile_ptr++;
       data_ptr = &PPU_MEM(bg_offset + (tile_index << 4));
@@ -727,7 +733,7 @@ static void ppu_renderbg(uint8 *vidbuf)
       /* Handle $FD/$FE tile VROM switching (PunchOut) */
       if (ppu.latchfunc)
          ppu.latchfunc(ppu.bg_base, tile_index);
-
+      // Shit is happening here
       draw_bgtile(bmp_ptr, data_ptr[0], data_ptr[8], ppu.palette + col_high);
       bmp_ptr += 8;
 
@@ -1172,7 +1178,6 @@ static void draw_sprite(bitmap_t *bmp, int x, int y, uint8 tile_num, uint8 attri
       vram_adr = ppu.obj_base + (tile_num << 4);
 
    data_ptr = &PPU_MEM(vram_adr);
-
    for (line = 0; line < height; line++)
    {
       if (line == 8)
@@ -1233,7 +1238,6 @@ void ppu_dumppattern(bitmap_t *bmp, int table_num, int x_loc, int y_loc, int col
       {
          data_ptr = &PPU_MEM((table_num << 12) + (tile_num << 4));
          ptr = bmp_ptr;
-
          for (line = 0; line < 8; line++)
          {
             draw_bgtile(ptr, data_ptr[0], data_ptr[8], ppu.palette + col_high);
