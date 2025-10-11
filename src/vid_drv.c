@@ -92,7 +92,7 @@ static viddriver_t *driver = NULL;
 INLINE int vid_memcmp(const void *p1, const void *p2, int len)
 {
    /* check for 32-bit aligned data */
-   if (0 == (((uint32)p1 & 3) | ((uint32)p2 & 3)))
+   if (0 == (((uintptr_t)p1 & 3) | ((uintptr_t)p2 & 3)))
    {
       uint32 *dw1 = (uint32 *)p1;
       uint32 *dw2 = (uint32 *)p2;
@@ -140,7 +140,7 @@ INLINE void vid_memcpy(void *dest, const void *src, int len)
    uint32 *s = (uint32 *)src;
    uint32 *d = (uint32 *)dest;
 
-   ASSERT(0 == ((len & 3) | ((uint32)src & 3) | ((uint32)dest & 3)));
+   ASSERT(0 == ((len & 3) | ((uintptr_t)src & 3) | ((uintptr_t)dest & 3)));
    len >>= 2;
 
    DUFFS_DEVICE(*d++ = *s++, len);

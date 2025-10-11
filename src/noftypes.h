@@ -60,13 +60,13 @@ typedef signed int int32;
 typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
-
+#include <stdint.h>
 #include "memguard.h"
 #include "log.h"
 
 #ifdef NOFRENDO_DEBUG
 
-#define ASSERT(expr) nofrendo_log_assert((int)(expr), __LINE__, __FILE__, NULL)
+#define ASSERT(expr) nofrendo_log_assert((uintptr_t)(expr), __LINE__, __FILE__, NULL)
 #define ASSERT_MSG(msg) nofrendo_log_assert(false, __LINE__, __FILE__, (msg))
 
 #else /* !NOFRENDO_DEBUG */
