@@ -23,7 +23,7 @@
 ** $Id: sdl.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 **
 */
-
+#ifdef NES_SDL
 #include <SDL/SDL.h>
 #include <SDL/SDL_timer.h>
 #include <SDL/SDL_video.h>
@@ -47,7 +47,7 @@
 #define  DEFAULT_FRAGSIZE     1024
 
 #define  DEFAULT_WIDTH        256
-#define  NES_VISIBLE_HEIGHT   224
+#define  NES_VISIBLE_HEIGHT   NES_SCREEN_HEIGHT
 #define  DEFAULT_HEIGHT       NES_VISIBLE_HEIGHT
 
 /*
@@ -787,3 +787,4 @@ int osd_init()
 ** initial revision
 **
 */
+#endif

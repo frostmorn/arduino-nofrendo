@@ -7,7 +7,7 @@
 ** $Id: osd.c,v 1.2 2001/04/27 14:37:11 neil Exp $
 **
 */
-
+#ifdef NES_UNIX
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
@@ -308,3 +308,4 @@ int osd_makesnapname(char *filename, int len)
 **
 **
 */
+#endif
