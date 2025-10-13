@@ -831,10 +831,7 @@ static void ppu_renderoam(uint8 *vidbuf, int scanline)
       sprite_x = sprite_ptr->x_loc;
       tile_index = sprite_ptr->tile;
       attrib = sprite_ptr->atr;
-      // TODO: clamp to NES_SCREEN_WIDTH && NES_SCREEN_HEIGHT and implement patitial draw for others
-      // there's a suspicious check on sprite_y above, though it doesn't fix our sprite_x problem
-      // check if sprite cords valid
-      if ((sprite_x > NES_SCREEN_WIDTH - 8)||(sprite_y > NES_SCREEN_HEIGHT - 8))
+      if (sprite_x > NES_SCREEN_WIDTH)
           continue;
 
 

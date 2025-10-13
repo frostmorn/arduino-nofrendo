@@ -405,7 +405,11 @@ int vid_setmode(int width, int height)
       bmp_destroy(&back_buffer);
 #endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 
+#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
    primary_buffer = bmp_create(width, height, 0); /* no overdraw */
+#else
+   primary_buffer = bmp_create(width, height, 8); /* overdraw 8 */
+#endif
    if (NULL == primary_buffer)
       return -1;
 
