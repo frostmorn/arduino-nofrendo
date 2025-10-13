@@ -701,9 +701,7 @@ static void ppu_renderbg(uint8 *vidbuf)
       memset(vidbuf, FULLBG, NES_SCREEN_WIDTH);
       return;
    }
-   // completely ignore xofs, mem bug, need to dive into it more
-   bmp_ptr = vidbuf;
-   // bmp_ptr = vidbuf - ppu.tile_xofs;              /* scroll x */
+   bmp_ptr = vidbuf - ppu.tile_xofs;              /* scroll x */
    refresh_vaddr = 0x2000 + (ppu.vaddr & 0x0FE0); /* mask out x tile */
    x_tile = ppu.vaddr & 0x1F;
    y_tile = (ppu.vaddr >> 5) & 0x1F;                  /* to simplify calculations */
@@ -718,10 +716,7 @@ static void ppu_renderbg(uint8 *vidbuf)
    col_high = ((attrib >> attrib_shift) & 3) << 2;
 
    /* ppu fetches 33 tiles */
-   tile_count = 32;
-   // ppu fetches 33, but screen is 32, additional one for smooth scrolling 
-   // but our vidbuf bitmap wrongly allocates mem or something.
-   // anyways we just render 32 and no mem problem. 
+   tile_count = 33;
       
    while (tile_count--)
    {
