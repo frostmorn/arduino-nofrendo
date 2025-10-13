@@ -35,12 +35,10 @@
 /* hardware surface */
 static bitmap_t *screen = NULL;
 
-/* primary / backbuffer surfaces */
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-static bitmap_t *primary_buffer = NULL, *back_buffer = NULL;
-#else /* !NOFRENDO_DOUBLE_FRAMEBUFFER */
+/* primary surface */
+// backbuffer_stuff should be done outside
+
 static bitmap_t *primary_buffer = NULL;
-#endif /* !NOFRENDO_DOUBLE_FRAMEBUFFER */
 
 static viddriver_t *driver = NULL;
 
@@ -386,13 +384,6 @@ void vid_flush(void)
       driver->custom_blit(primary_buffer, num_dirties, dirty_rects);
    else
       vid_blitscreen(num_dirties, dirty_rects);
-
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   /* Swap pointers to the main/back buffers */
-   temp = back_buffer;
-   back_buffer = primary_buffer;
-   primary_buffer = temp;
-#endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 }
 
 /* emulated machine tells us which resolution it wants */
@@ -400,34 +391,13 @@ int vid_setmode(int width, int height)
 {
    if (NULL != primary_buffer)
       bmp_destroy(&primary_buffer);
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   if (NULL != back_buffer)
-      bmp_destroy(&back_buffer);
-#endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   primary_buffer = bmp_create(width, height, 0); /* no overdraw */
-#else
    primary_buffer = bmp_create(width, height, 8); /* overdraw 8 */
-#endif
    if (NULL == primary_buffer)
       return -1;
 
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   /* Create our backbuffer */
-   back_buffer = bmp_create(width, height, 0); /* no overdraw */
-   if (NULL == back_buffer)
-   {
-      bmp_destroy(&primary_buffer);
-      return -1;
-   }
-#endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 
    bmp_clear(primary_buffer, GUI_BLACK);
-
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   bmp_clear(back_buffer, GUI_BLACK);
-#endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 
    return 0;
 }
@@ -483,11 +453,6 @@ void vid_shutdown(void)
 
    if (NULL != primary_buffer)
       bmp_destroy(&primary_buffer);
-
-#ifdef NOFRENDO_DOUBLE_FRAMEBUFFER
-   if (NULL != back_buffer)
-      bmp_destroy(&back_buffer);
-#endif /* NOFRENDO_DOUBLE_FRAMEBUFFER */
 
    if (driver && driver->shutdown)
       driver->shutdown();
