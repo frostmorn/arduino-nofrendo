@@ -414,7 +414,8 @@ static int vid_findmode(int width, int height, viddriver_t *osd_driver)
    driver = osd_driver;
 
    /* re-assert dimensions, clear the surface */
-   screen = driver->lock_write();
+   if (driver->lock_write)
+      screen = driver->lock_write();
 
    /* use custom pageclear, if necessary */
    if (driver->clear)
@@ -422,7 +423,8 @@ static int vid_findmode(int width, int height, viddriver_t *osd_driver)
    else
       bmp_clear(screen, GUI_BLACK);
 
-   nofrendo_log_printf("video driver: %s at %dx%d\n", driver->name,
+   if (screen)
+      nofrendo_log_printf("video driver: %s at %dx%d\n", driver->name,
                        screen->width, screen->height);
 
    /* release surface */
